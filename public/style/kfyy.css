@@ -1,0 +1,29 @@
+.list_2 {
+    ul {
+        @extend .cf; // .........,.......scss....
+        li {
+            width: 50%;float: left;padding: 1rem 0;
+            outline: 1px solid #ddd;  // .. outline .... (outline.......)
+            background: #fff;  // ........,.. outline .... 2px ..
+            a {
+                display: block;
+                text-decoration: none; // .......
+            }
+            .goods_title,.goods_price {
+                padding: 0 1rem; // .......,.........
+                text-align: center;
+            }
+            .goods_photo {
+                width: 60%;margin: .5rem auto;display: block;
+            }
+        }
+    }
+}
+// ..............
+.goods_title,.goods_price {
+    display: block;position: relative;
+    @include ts(); // ..........
+    @include online(1.8rem); // ..............
+}
+.goods_title {color:#000;font-size: 1.2rem;}
+.goods_price {color:#f60;font-size: 1.5rem;font-weight: bold;}
