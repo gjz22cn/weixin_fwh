@@ -35,7 +35,7 @@
 |gender|ENUM('男','女') |性别 ||
 |age   |int |年龄 ||
 |idCard|varchar(20) |身份证 ||
-|dateS |date|如愿日期|年-月-日|
+|dateS |date|入院日期|年-月-日|
 |dateE |date|出院日期|年-月-日|
 |comment|varchar(256)|备注||
 |phone|varchar(12)|手机号||
