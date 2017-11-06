@@ -25,7 +25,9 @@
 |url   |varchar(255)|主页|default: null|
 |level |ENUM('1级','2级','3级')|等级|default: '1级'|
 |cnum  |int   |床位数目|default: 0|
-|mgmtUid |int   |管理员ID|foreign key：users id|
+|phone1|varchar(12)   |管理员手机号1||
+|phone2|varchar(12)   |管理员手机号2||
+|phone3|varchar(12)   |管理员手机号3||
 
 ### 预约(kfyy_yuyue)
 |字段   |类型  |说明   |备注   |
