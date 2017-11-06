@@ -27,7 +27,7 @@
 |cnum  |int   |床位数目|default: 0|
 |mgmtUid |int   |管理员ID|foreign key：users id|
 
-### 预约(booking)
+### 预约(kfyy_yuyue)
 |字段   |类型  |说明   |备注   |
 |:-----|:-----|:------|:------|
 |id    |int   | |primary key<br>not null auto_increment|
