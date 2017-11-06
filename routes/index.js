@@ -1,6 +1,7 @@
 var express = require('express');
 var crypto = require('crypto');
 var router = express.Router();
+var request = require('request');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -33,6 +34,61 @@ router.get('/weixin', function(req, res, next) {
     }else{
         res.send("error");
     }
+});
+
+router.get('/MP_verify_FfjmvluhDdcVqMqe.txt', function(req, res, next) {
+  res.sendfile('MP_verify_FfjmvluhDdcVqMqe.txt');
+});
+
+var AppID = 'wx29114cbbfc3c86d3';
+var AppSecret = 'a9b3e90064d5e5a44e4de6c3a4990c16';
+var Scope = 'snsapi_userinfo';
+var RedirectUrl = "http://www.act101.cn/mysq_r"
+
+router.get('/mysq', function(req, res, next) {
+  res.redirect(302, 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='+AppID+'&redirect_uri='+encodeURI(RedirectUrl)+'&response_type=code&scope='+Scope+'&state=STATE#wechat_redirect');
+});
+
+router.get('/mysq_r', function(req, res, next) {
+    var code = req.query.code;
+    request.get(
+        {   
+            url:'https://api.weixin.qq.com/sns/oauth2/access_token?appid='+AppID+'&secret='+AppSecret+'&code='+code+'&grant_type=authorization_code',
+        },
+        function(error, response, body){
+            if(response.statusCode == 200){
+                var data = JSON.parse(body);
+                var access_token = data.access_token;
+                var openid = data.openid;
+
+		//console.log("body="+body);
+		//console.log("access_token="+access_token+",openid="+openid);
+                request.get(
+                    {
+                        url:'https://api.weixin.qq.com/sns/userinfo?access_token='+access_token+'&openid='+openid+'&lang=zh_CN',
+                    },
+                    function(error, response, body){
+                        if(response.statusCode == 200){
+
+                            var userinfo = JSON.parse(body);
+                            //console.log("userinfo="+JSON.stringify(userinfo));
+
+                            res.send("\
+                                <h1>"+userinfo.nickname+" .....</h1>\
+                                <p><img src='"+userinfo.headimgurl+"' /></p>\
+                                <p>"+userinfo.city+"."+userinfo.province+"."+userinfo.country+"</p>\
+                            ");
+
+                        }else{
+                            console.log(response.statusCode);
+                        }
+                    }
+                );
+            }else{
+                console.log(response.statusCode);
+            }
+        }
+    );
 });
 
 module.exports = router;
