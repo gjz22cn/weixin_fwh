@@ -40,3 +40,5 @@
 |comment|varchar(256)|备注||
 |phone|varchar(12)|手机号||
 |uid  |int   |用户ID|foreign key：users id|
+|kfyyId  |int   |用户ID|foreign key：kfyy id|
+|status|ENUM('未处理','拒绝'，'接收') |状态 ||
