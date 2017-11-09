@@ -7,8 +7,8 @@ var User = require('../model/user');
 var config = require('../config');
 var smskey = require('../middleware/smskey');
 var userRole = require('../middleware/role');
-var Pps = require('../model/pps');
-var Community = require('../model/community');
+//var Pps = require('../model/pps');
+//var Community = require('../model/community');
 
 const SMSClient = require('@alicloud/sms-sdk');
 
@@ -27,27 +27,6 @@ exports.message_handle = function(req, res, next) {
     }
     else if ('MSG_TYPE_USER_LOGIN' == req.body.type) {
         login(req, res, next);
-    }
-    else if ('MSG_TYPE_USER_LOGINOUT' == req.body.type) {
-        loginout(req, res, next);
-    }
-    else if ('MSG_TYPE_USER_GET_VERCODE' == req.body.type) {
-        smsSend(req, res, next);
-    }
-    else if ('MSG_TYPE_USER_SMS_VERIFY' == req.body.type) {
-        smsVerify(req, res, next);
-    }
-    else if ('MSG_TYPE_USER_VERCODE_LOGIN' == req.body.type) {
-        verLogin(req, res, next);
-    }
-    else if ('MSG_TYPE_USER_ADD_MGMT' == req.body.type) {
-        addXiaoquMgmt(req, res, next);
-    }
-    else if ('MSG_TYPE_USER_GET_INFO' == req.body.type) {
-        getUserInfo(req, res, next);
-    }
-    else if ('MSG_TYPE_USER_CHANGE_INFO' == req.body.type) {
-        changeUserInfo(req, res, next);
     }
     else {
         next();
@@ -260,6 +239,7 @@ exports.verCodeLogin = function(req, res, next) {
             }
             user.role = "system";
             user.roleId = sys[0].id;
+            /*
         } else if (loginType == "changshang") {
             var pps = await Pps.query(filter1);
             if (!pps) {
@@ -276,6 +256,7 @@ exports.verCodeLogin = function(req, res, next) {
             }
             user.role = "xiaoqu";
             user.roleId = xiaoqu[0].id;
+            */
         } else if (loginType == "user") {
             filter.role = "user";
             var usr = await User.query(filter);
@@ -396,184 +377,6 @@ exports.sendSMS = function smsSend(req, res, next) {
         };
         res.send(JSON.stringify(retStr));
     });
-}
-
-function smsVerify(req, res, next) {
-    
-    var phoneNum = req.body.phoneNumber;
-    var code = req.body.verCode;
-    var ep = new eventproxy();
-
-    ep.fail(next);
-
-    ep.on('login_error', function(msg) {
-        var retStr = {
-            type: req.body.type,
-            ret: 1,
-            msg: msg 
-        };
-
-        res.send(JSON.stringify(retStr));
-    });
-
-    smskey.getCode(phoneNum, function(reply) {
-        if (reply.toString() === code.toString()) {
-            var retStr = {
-                type: req.body.type,
-                ret: 0
-            };
-            res.send(JSON.stringify(retStr));
-
-            User.getUserById(req.session.user.id).then((user) => {
-                if (!user) {
-                    ep.emit('err', '数据库错误');
-                    return;
-                }
-
-                User.setUserActive(user);
-            });
-        }
-        else {
-            
-            ep.emit('err', '验证码错误');
-        }
-    });
-}
-
-function verLogin(req, res, next) {
-
-    var phoneNum = req.body.phoneNumber;
-    var code = req.body.verCode;
-    var uid;
-    var role;
-    var ep = new eventproxy();
-
-    ep.fail(next);
-
-    ep.on('err', function(msg) {
-        var retStr = {
-            type: req.body.type,
-            ret: 1,
-            msg: msg 
-        };
-
-        res.send(JSON.stringify(retStr));
-    });
-
-    if (phoneNum ==='') {
-        ep.emit('err', '手机号码不能为空');
-        return;
-    }
-
-    if (!validator.isNumeric(phoneNum) || !validator.isLength(phoneNum, 11)) {
-        ep.emit('err', '手机号码不合法');
-        return;
-    }
-
-    (async () => {
-        var user = await User.getUserByPhone(phoneNum);
-
-        /*if (user && user.is_active) {
-            ep.emit('err', '用户已存在');
-            return;
-        }*/
-
-        //get vercode from redis and compare
-        //suppose the result is correct, then do
-        //
-
-        if (user) {
-
-            //await User.setUserActive(user);
-            uid = user.id;
-            role = user.role;
-            authMiddleWave.gen_session(user, res);
-
-        }
-        else {
-            var newUser = {
-                phone_num: phoneNum,
-                //is_active: true
-            };
-
-            var newuser = await User.newAndSave(newUser);
-            uid = newuser.id;
-            role = newuser.role;
-            authMiddleWave.gen_session(newuser, res);
-
-        }
-
-        var retStr = {
-            type: req.body.type,
-            ret: 0,
-            uid: uid,
-            role: userRole.getUserRole(role)
-        };
-
-        res.send(JSON.stringify(retStr));
-
-    }) ()
-
-}
-
-function addXiaoquMgmt(req, res, next) {
-    var phone = req.body.phoneNumber;
-    var passwd = req.body.passwd; 
-
-    var ep = new eventproxy();
-    ep.fail(next);
-    ep.on('prop_err', function(msg) {
-        var retStr = {
-            type: req.body.type,
-            ret: 1,
-            msg: msg
-        };
-        console.log('msg:'+msg);
-
-        res.send(JSON.stringify(retStr));
-    });
-
-    if (!validator.isNumeric(phone) || !validator.isLength(phone, 11)) {
-        ep.emit('prop_err', '手机号码不合法');
-        return;
-    }
-
-    (async () => {
-        var user = await User.getUserByPhone(phone);
-         
-        if (user) {
-            ep.emit('prop_err', '手机号码已被使用');
-            return;
-        }
-
-        var md5 = crypto.createHash('md5');
-        var pass = md5.update(passwd).digest('base64');
-
-        var newUser = {
-            passwd: pass,
-            phone_num: phone,
-            is_mgmt: true,
-        };
-
-        var user = await User.newAndSave(newUser);
-
-        if (!user) {
-            ep.emit('prop_err', '数据库错误');
-            return;
-        }
-        else {
-            var retStr = {
-                type: req.body.type,
-                ret: 0,
-                uid: user.id
-            };
-
-            res.send(JSON.stringify(retStr));
-        }
-
-
-    }) ();
-
 }
 
 exports.getone = function getUserInfo(req, res, next) {

@@ -2,11 +2,22 @@ var express = require('express');
 var crypto = require('crypto');
 var router = express.Router();
 var request = require('request');
+var user = require('../control/user');
+var auth = require('../middleware/auth');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
+
+/* RESTful api START */
+router.get('/user/getVerCode', user.sendSMS);
+router.post('/user/vcLogin', user.verCodeLogin);
+router.get('/user/logout', auth.userRequired, user.logout);
+router.get('/user/:id', auth.userRequired, user.getone);
+router.put('/user/:id', auth.userRequired, user.update);
+/* RESTful api END */
+
 
 var token = "1234567890abcdefgh"; //..........
 
