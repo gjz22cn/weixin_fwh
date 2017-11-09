@@ -6,6 +6,7 @@ var userM = require('../model/user');
 var config = require('../config');
 var auth = require('../middleware/auth');
 var weixin = require("../control/weixin");
+var maintain = require("../control/maintain");
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -39,28 +40,11 @@ router.get('/mysq_r', function(req, res, next) {
 });
 /* weixin related END */
 
+
+/* maintain related START */
 router.get('/create_admin', function(req, res, next) {
-
-    (async() => {
-        var user = await userM.getUserByName(config.admin);
-
-        if (user) {
-            userM.deleteUser(user);
-        }
-        
-        var md5 = crypto.createHash('md5');
-        var pass = md5.update(config.admin_passwd).digest('base64');
-        var admin = {
-            login_name: config.admin,
-            passwd: pass,
-            phone_num: config.phone_num,
-            role: 'system'
-        };
-
-        userM.newAndSave(admin);
-    
-        res.redirect('/');
-    }) ()
+    maintain.create_admin(req, res, next);
 });
+/* maintain related END */
 
 module.exports = router;
