@@ -6,9 +6,11 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@alicloud/sms-sdk": "^1.0.2",
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
+    "eventproxy": "^1.0.0",
     "express": "~4.15.5",
     "morgan": "~1.9.0",
     "mysql": "^2.15.0",
