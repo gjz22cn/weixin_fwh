@@ -1,4 +1,3 @@
-
 var Sequelize = require('sequelize');
 var sequelize = require('../lib/mysql');
 
@@ -34,12 +33,9 @@ var User = sequelize.define('user', {
     addr3: {type: Sequelize.STRING, defaultValue: ""},
     addr4: {type: Sequelize.STRING, defaultValue: ""},
     addr5: {type: Sequelize.STRING, defaultValue: ""},
-    }, {
-
+}, {
     freezeTableName: true
-
-    }
-);
+});
 
 var user = User.sync({force: false});
 

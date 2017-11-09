@@ -186,6 +186,8 @@ exports.verCodeLogin = function(req, res, next) {
         phone: phoneNum
     };
 
+    console.log("verCodeLogin");
+
     ep.fail(next);
 
     ep.on('err', function(msg) {
@@ -194,6 +196,7 @@ exports.verCodeLogin = function(req, res, next) {
             msg: msg 
         };
 
+        console.log("err:"+msg);
         res.send(JSON.stringify(retStr));
     });
 
@@ -239,6 +242,7 @@ exports.verCodeLogin = function(req, res, next) {
             }
             user.role = "system";
             user.roleId = sys[0].id;
+            console.log("user.role="+user.role+",user.roleId="+user.roleId);
             /*
         } else if (loginType == "changshang") {
             var pps = await Pps.query(filter1);
