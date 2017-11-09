@@ -27,7 +27,7 @@ var User = sequelize.define('user', {
 
     is_active: {type: Sequelize.BOOLEAN, defaultValue: false},
 
-    role: {type: Sequelize.ENUM, values: ['system', 'spo', 'spp', 'user'], defaultValue: 'user'},
+    role: {type: Sequelize.ENUM, values: ['system', 'kfyy', 'spo', 'spp', 'user'], defaultValue: 'user'},
 
     addr1: {type: Sequelize.STRING, defaultValue: ""},
     addr2: {type: Sequelize.STRING, defaultValue: ""},
