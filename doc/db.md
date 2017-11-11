@@ -27,8 +27,8 @@
 |url   |varchar(255)|主页|default: null|
 |level |ENUM('1级','2级','3级')|等级|default: '1级'|
 |chuangwei  |int   |床位数目|default: 0|
-|phone|varchar(12)   |联系人手机号||
-|contacts|varchar(64)   |联系人称呼||
+|phone|varchar(11)   |联系人手机号||
+|contacts|varchar(16)   |联系人称呼||
 |email|varchar(64)   |联系人邮箱||
 
 ### 预约(kfyy_yuyue)
@@ -42,7 +42,7 @@
 |dateS |date|入院日期|年-月-日|
 |dateE |date|出院日期|年-月-日|
 |comment|varchar(256)|备注||
-|phone|varchar(12)|手机号||
+|phone|varchar(11)|手机号||
 |uid  |int   |用户ID|foreign key：users id|
 |kfyyId  |int   |用户ID|foreign key：kfyy id|
 |status|ENUM('未处理','拒绝'，'接收') |状态 ||
