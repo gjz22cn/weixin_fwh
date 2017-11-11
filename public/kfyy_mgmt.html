@@ -7,7 +7,7 @@
 		<link rel="stylesheet" href="css/router_currentsource.css" />
 		<script type="text/javascript" src="js/jquery.1.9.1.js"></script>
 		<script type="text/javascript" src="js/vue.js"></script>
-		<title id="name" fileNam="plugin">小区管理</title>
+		<title id="name" fileNam="plugin">康复医院</title>
 	</head>
 
 	<body onload="load()">
@@ -22,7 +22,7 @@
 				<div>
 					<table style="margin-left:20px;margin-top:20px;margin-bottom:20px">
 						<tr>
-							<td>厂商名称:</td>
+							<td>康复医院名称:</td>
 							<td><input id="csname" type="text" style="width:600px;" name="csname"></isindex></td>
 							<td style="padding-left:20px;"><button  class="redBtn" v-on:click="refresh"  style="background:orange;">筛选</button></td>
 						</tr>
@@ -30,25 +30,27 @@
 				</div>
 				<div style="height: 20px;background: rgba(0,0,0,0.05);"></div>
 
-                <div class="pluginTitle" style="position: relative;"><a>厂商信息</a><button class="blueBut" v-on:click="add" type='button' style="position: absolute;right: 5px;top: 4px;">添加</button></div>
+                <div class="pluginTitle" style="position: relative;"><a>康复医院信息</a><button class="blueBut" v-on:click="add" type='button' style="position: absolute;right: 5px;top: 4px;">添加</button></div>
 				<div class="tableContainer" >
 					<table id="table" style="margin-top: 10px;">
 						<tr>
-							<th>厂商名称</th>
-							<th>联系人</th>
-							<th>联系人手机</th>
-							<th>Email</th>
-							<th>停车场数目</th>
-							<th>注册时间</th>
+							<th>名称</th>
+							<th>城市</th>
+							<th>区</th>
+							<th>地址</th>
+							<th>等级</th>
+							<th>床位数</th>
+                            <th>联系人手机</th>
 							<th style="text-align: center;">管理</th>
 						</tr>
 						<tr id="cell" class="cell" v-for="dic in message">
 							<td>{{dic.name}}</td>
-							<td>{{dic.contacts}}</td>
+							<td>{{dic.city}}</td>
+							<td>{{dic.district}}</td>
+							<td>{{dic.addr}}</td>
+							<td>{{dic.level}}</td>
+							<td>{{dic.changwei}}</td>
 							<td>{{dic.phone}}</td>
-							<td>{{dic.email}}</td>
-							<td>{{dic.parkNum}}</td>
-							<td>{{dic.createdAt}}</td>
 							<td style="text-align: center;">
 								<a v-on:click="edit($event)" class="pluginVersion blueBut edit">编辑</a>
 								<a v-on:click="deleteItem($event);" v-bind:info="getInfo(dic)" class="pluginDelete redBtn">删除</a>
@@ -64,7 +66,7 @@
 	</body>
 	<script type="text/javascript" src="js/public.js"></script>
 	<script>
-        var editPage = "editManufacture.html";
+        var editPage = "kfyy_edit.html";
 		var vm = new Vue({
 			el: '#vueApp',
 			data: {
@@ -76,14 +78,14 @@
 				},
 				//添加
 				add:function(){
-                    var manuInfo = {
+                    var kfyyInfo = {
                         action: "add"
                     };
-                    window.localStorage.setItem('manuInfo', JSON.stringify(manuInfo));
+                    window.localStorage.setItem('kfyyInfo', JSON.stringify(kfyyInfo));
 					location.href = editPage;
 				},
                 deleteReq: function(id) {
-                    priAjaxDel("/pps/"+id,
+                    priAjaxDel("/kfyy/"+id,
                             function(data) {
                                 if (data.ret == 0) {
                                     this.reload();
@@ -97,15 +99,15 @@
 					var info = $(athis.currentTarget).attr("info");
 					var confirm1 = confirm("确定删除？");
 					if(confirm) {
-                        var manuInfo = JSON.parse(info);
-						this.deleteReq(manuInfo.id);
+                        var kfyyInfo = JSON.parse(info);
+						this.deleteReq(kfyyInfo.id);
 					}
 				},
 				edit: function(athis) {
 					var info = $(athis.currentTarget).next().attr("info");
-                    var manuInfo = JSON.parse(info);
-                    manuInfo.action = "edit";
-                    window.localStorage.setItem('manuInfo', JSON.stringify(manuInfo));
+                    var kfyyInfo = JSON.parse(info);
+                    kfyyInfo.action = "edit";
+                    window.localStorage.setItem('kfyyInfo', JSON.stringify(kfyyInfo));
 					$(athis.currentTarget).attr({
 						href: editPage
 					});
@@ -123,7 +125,7 @@
                         filter.name = csname;
                     }
 
-                    priAjaxGet("/pps?filter="+encodeURI(JSON.stringify(filter)), "",
+                    priAjaxGet("/kfyy?filter="+encodeURI(JSON.stringify(filter)), "",
                             function(data) {
                                 if (data.ret == 0) {
                                     vm.message = data.data;
