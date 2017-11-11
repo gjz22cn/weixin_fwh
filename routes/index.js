@@ -13,6 +13,36 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+router.get('/rolemain', function(req, res, next) {
+    console.log("get /rolemain");
+
+    if (!req.session || !req.session.user) {
+        res.render('login', {title: '关爱社区'});
+        return;
+    }
+    console.log("get /rolemain2");
+
+    console.log(JSON.stringify(req.session.user));
+
+    switch(req.session.user.role) {
+        case "system":
+            res.render('main_admin', {title: '关爱社区'});
+            break;
+        case "kfyy":
+            res.render('main_kfyy', {title: '关爱社区'});
+            break;
+        case "shequ":
+            res.render('main_shequ', {title: '关爱社区'});
+            break;
+        case "user":
+            res.render('main_user', {title: '关爱社区'});
+            break;
+        default:
+            res.render('login', {title: '关爱社区'});
+    };
+});
+
+
 /* RESTful api START */
 router.get('/user/getVerCode', user.sendSMS);
 router.post('/user/vcLogin', user.verCodeLogin);

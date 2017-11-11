@@ -16,7 +16,8 @@ var auth = require('./middleware/auth');
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+//app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'public'));
 //app.set('view engine', 'jade');
 app.engine('.html', require('ejs').__express);  
 app.set('view engine', 'html');
