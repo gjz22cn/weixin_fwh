@@ -49,7 +49,7 @@
 							<td>{{dic.district}}</td>
 							<td>{{dic.addr}}</td>
 							<td>{{dic.level}}</td>
-							<td>{{dic.changwei}}</td>
+							<td>{{dic.chuangwei}}</td>
 							<td>{{dic.phone}}</td>
 							<td style="text-align: center;">
 								<a v-on:click="edit($event)" class="pluginVersion blueBut edit">编辑</a>
@@ -129,12 +129,13 @@
                             function(data) {
                                 if (data.ret == 0) {
                                     vm.message = data.data;
+                                    alert(JSON.stringify(data.data));
                                 } else {
                                     alert(msg);
                                 }
                             },
                             function() {
-                                alert("获取厂商信息失败！");
+                                alert("获取康复医院信息失败！");
                             });
                 }
 			}
