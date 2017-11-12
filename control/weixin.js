@@ -110,6 +110,24 @@ exports.service_r = function(req, res, next) {
 
                 //console.log("body="+body);
                 //console.log("access_token="+access_token+",openid="+openid);
+                if (typeof(data.openid) != 'undefined') {
+                    (async () => {
+                        var objs = await User.query({openId: openid});
+
+                        if (objs.length > 0) {
+                            var user = {
+                                role: "user",
+                                roleId: objs[0].id
+                            };
+
+                            authMiddleWave.gen_session(user, res);
+
+                            res.render('service', { title: '服务' });
+                            return;
+                        }
+                    }) ()
+                }
+
                 request.get(
                     {
                         url:'https://api.weixin.qq.com/sns/userinfo?access_token='+access_token+'&openid='+openid+'&lang=zh_CN',
@@ -122,43 +140,31 @@ exports.service_r = function(req, res, next) {
 
                             if (typeof(userinfo.openid) != 'undefined') {
                                 (async () => {
-                                    var user = {
-                                        role: "user",
-                                        roleId: -1
-                                    };
-                                    var filter = {
-                                        openId: userinfo.openId
-                                    };
-
-                                    var objs = await User.query(filter);
                                     var gender = 'male';
                                     if (userinfo.sex != 1) {
                                         gender = 'female';
                                     }
 
-                                    if (objs.length == 0) {
-                                        var newUser = {
-                                            wx_name: userinfo.nickname,
-                                            openId: userinfo.openId,
-                                            gender: gender,
-                                            country: userinfo.country,
-                                            province: userinfo.province,
-                                            city: userinfo.city,
-                                        };
+                                    var newUser = {
+                                        wx_name: userinfo.nickname,
+                                        openId: userinfo.openid,
+                                        gender: gender,
+                                        country: userinfo.country,
+                                        province: userinfo.province,
+                                        city: userinfo.city,
+                                    };
 
-                                        objs = await User.newAndSave(newUser);
-                                        if (!objs) {
-                                            ep.emit('err', '后台错误！');
-                                            return;
-                                        }
-                                        user.roleId = objs.id;
-                                    } else {
-                                        user.roleId = objs[0].id;
+                                    objs = await User.newAndSave(newUser);
+                                    if (!objs) {
+                                        res.render('error', { title: '服务' });
+                                        return;
                                     }
-                                    user.role = "user";
+                                    var user = {
+                                        role: "user",
+                                        roleId: objs.id
+                                    };
 
                                     authMiddleWave.gen_session(user, res);
-
                                     res.render('service', { title: '服务' });
                                 }) ()
                             }
