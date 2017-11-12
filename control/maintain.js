@@ -1,5 +1,6 @@
 var userM = require('../model/user');
 var config = require('../config');
+var crypto = require('crypto');
 
 exports.create_admin = function(req, res, next) {
     (async() => {
