@@ -1,5 +1,6 @@
 
 var Kfyy = require('../model/kfyy');
+var KfyyOrder = require('../model/kfyyOrder');
 var eventproxy = require('eventproxy');
 var User = require('../model/user');
 var validator = require('validator');
@@ -276,6 +277,70 @@ exports.getNameList = function(req, res, next) {
         };
 
         res.send(JSON.stringify(retStr));
+    }) ()
+}
+
+// path: /kfyy/order
+exports.order = function(req, res, next) {
+    var name = req.body.name;
+    var gender = req.body.gender;
+    var age = req.body.age;
+    var idCard = req.body.idCard;
+    var dateS = req.body.dateS;
+    var dateE = req.body.dateE;
+    var comment = req.body.comment;
+    var phone = req.body.phone;
+    var kfyyId = req.body.kfyyId;
+    var uid = req.session.user.id;
+    var ep = new eventproxy();
+
+    ep.fail(next);
+    ep.on('err', function(msg) {
+        var retStr = {
+            ret: msg.ret,
+            msg: msg,str
+        };
+
+        res.send(JSON.stringify(retStr));
+    });
+
+    if ([kfyyId, uid, phone].some(function(item) {return item === '';})) {
+        ep.emit('err', '信息不完整');
+        return;
+    }
+
+    if (!validator.isNumeric(phone) || !validator.isLength(phone, 11)) {
+        ep.emit('prop_err', '手机号码不合法');
+        return;
+    }
+
+    (async() => {
+        var newObj = {
+            name: name, 
+            gender: gender, 
+            age: age, 
+            idCard: idCard, 
+            dateS: dateS, 
+            dateE: dateE, 
+            comment: comment, 
+            phone: phone, 
+            kfyyId: kfyyId, 
+            uid: uid, 
+        };
+
+        var obj = await KfyyOrder.newAndSave(newObj);
+        if (!obj) {
+            ep.emit('err', '数据库错误');
+            return;
+        }
+
+        var retStr = {
+            ret: 0,
+            id: obj.id
+        };
+
+        res.send(JSON.stringify(retStr));
+
     }) ()
 }
 

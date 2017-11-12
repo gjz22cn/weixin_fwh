@@ -1,0 +1,92 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <script type="text/javascript" src="js/jquery.1.9.1.js"></script>
+    <script type="text/javascript" src="js/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="js/jquery-form.js"></script>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <link rel="stylesheet" href="css/all.css" />
+    <link rel="stylesheet" href="css/addPlugin.css" />
+    <title>康复医院信息</title>
+</head>
+<body onload="load()">
+    <!--记录数据-->
+    <div id="fileName" fileNam="kfyy_edit"></div>
+    <!--记录数据-->
+    <div id="vm">
+        <div class="pluginTitle">
+            <a class="backBtn">取消</a>康复医院预约</div>
+        <span class="titleSpan">正在预约：{{kfyy.name}}</span>
+        <form id="orderForm">
+            <div class="inputContainer">
+                <span class="nameSpan">姓名</span><input v-bind:value="order.name" class="inputName" type="text" name="name" placeholder="" />
+                <span class="nameSpan">性别</span><input v-bind:value="order.gender" class="inputName" type="text" name="gender" placeholder="" />
+                <span class="nameSpan">年龄</span><input v-bind:value="order.age" class="inputName" type="text" name="age" placeholder="" />
+                <span class="nameSpan">身份证</span><input v-bind:value="order.idCard" class="inputName" type="text" name="idCard" placeholder="" />
+                <span class="nameSpan">预计入住日期</span><input v-bind:value="order.dateS" class="inputName" type="text" name="dateS" placeholder="" />
+                <span class="nameSpan">预计出院日期</span><input v-bind:value="order.dateS" class="inputName" type="text" name="dateE" placeholder="" />
+                <span class="nameSpan">联系人手机</span><input v-bind:value="order.phone" class="inputName" type="text" name="phone" placeholder="" />
+                <input class="inputSubmit" type="button" value="提交" onclick="apply()"/>
+            </div>
+        </form>
+    </div>
+</body>
+
+<script type="text/javascript" src="js/public.js"></script>
+<script>
+var kfyy = JSON.parse(window.localStorage.getItem('kfyyInfo'));
+
+var vm = new Vue({
+    el: '#vm',
+    data:{
+        kfyy: kfyy,
+        order:{
+        }
+    },
+    methods:{
+        getKfyyNameList: function () {
+            var _self = this;
+            priAjaxGet("/kfyy/namelist", "",
+                    function(data) {
+                        if (data.ret == 0) {
+                            for(var idx in data.data) {
+                                _self.cs_ops.push({text: data.data[idx].name, value: data.data[idx].id});
+                            }
+                        } else {
+                            //alert(data.msg);
+                        }
+                    },
+                    function() {
+                        //alert("获取账单明细失败！");
+                    });                    
+        }
+
+    }
+});
+
+
+function apply() {
+    $("#orderForm").ajaxSubmit({
+        type: 'post',
+        url: '/kfyy/order',
+        timeout: 2000,
+        cache: false,
+        data: {
+            kfyyId: kfyy.id
+        },
+        success: function(data) {
+            alert("成功");
+        },
+        error: function() {
+            alert("失败");
+        }
+    });
+}
+
+function load() {
+    //vm.getKfyyNameList();
+}
+</script>
+</html>

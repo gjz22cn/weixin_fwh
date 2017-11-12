@@ -51,6 +51,7 @@ router.get('/user/:id', auth.userRequired, user.getone);
 router.put('/user/:id', auth.userRequired, user.update);
 
 router.post('/kfyy', auth.userRequired, kfyy.add);
+router.post('/kfyy/order', auth.userRequired, kfyy.order);
 router.get('/kfyy/namelist', auth.userRequired, kfyy.getNameList);
 router.get('/kfyy', auth.userRequired, kfyy.get);
 router.get('/kfyy/:id', auth.userRequired, kfyy.getone);

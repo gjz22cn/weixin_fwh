@@ -29,6 +29,18 @@ a{
 	margin-bottom:5px;
 }
 
+.titleSpan{
+	display:inline-block;
+	*display: inline;
+	zoom: 1;
+	padding-left:20%;
+	width: 50%;
+	margin: 0px auto;
+	text-align: left;
+	padding-left: -12px;
+	/*border: 1px solid red;*/
+
+}
 .nameSpan{
 	display:inline-block;
 	*display: inline;
