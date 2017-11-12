@@ -1,5 +1,6 @@
 var request = require('request');
 var User = require('../model/user');
+var authMiddleWave = require('../middleware/auth');
 
 var token = "1234567890abcdefgh"; //..........
 
