@@ -98,7 +98,7 @@
 				deleteItem: function(athis) {
 					var info = $(athis.currentTarget).attr("info");
 					var confirm1 = confirm("确定删除？");
-					if(confirm) {
+					if(confirm1) {
                         var kfyyInfo = JSON.parse(info);
 						this.deleteReq(kfyyInfo.id);
 					}

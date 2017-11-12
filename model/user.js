@@ -52,9 +52,15 @@ User.newAndSave = function(user) {
         passwd: user.passwd,
         phone_num: user.phone_num,
         is_active: user.is_active,
-        is_mgmt: user.is_mgmt,
         role: user.role,
-        email: user.email
+        email: user.email,
+
+        wx_name: user.wx_name,
+        openId: user.openId,
+        gender: user.gender,
+        country: user.country,
+        province: user.province,
+        city: user.city,
     });
 };
 

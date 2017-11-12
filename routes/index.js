@@ -75,6 +75,14 @@ router.get('/mysq', function(req, res, next) {
 router.get('/mysq_r', function(req, res, next) {
     weixin.mysq_r(req, res, next);
 });
+
+router.get('/service', function(req, res, next) {
+    weixin.service(req, res, next);
+});
+
+router.get('/service_r', function(req, res, next) {
+    weixin.service_r(req, res, next);
+});
 /* weixin related END */
 
 
