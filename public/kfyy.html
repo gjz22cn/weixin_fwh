@@ -1,55 +1,65 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-<title>康复医院</title>
-<script src="https://unpkg.com/vue"></script>
-<style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <script type="text/javascript" src="js/jquery.1.9.1.js"></script>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <title>康复医院</title>
+    <style>
 .yyitem{margin-top:2px}
-</style>
+    </style>
 </head>
-<body>
-	<h2>南京市</h2>
-	<hr>
-	<div id="yylist">
-    	<div v-for="item in items" class="yyitem">
-    			<a style="float:left;" v-bind:href="item.url">{{ item.name }}</a><input type="button" style="float:right;" value="预约"></input>
-    			<br>
-    			<p>
-    			<small>床位：{{ item.chuangwei }}</small><br>
-    			<small>地址：{{ item.addr }}</small>
-    			</p>
-    		<hr>
-    	</div>
-  </div>
+
+<body onload="load()">    
+    <h2>南京市</h2>
+    <hr>
+    <div id="yylist">
+        <div v-for="item in items" class="yyitem">
+            <a style="float:left;" v-bind:href="item.url">{{ item.name }}</a><input type="button" style="float:right;" value="预约"></input>
+            <br>
+            <p>
+            <small>床位：{{ item.chuangwei }}</small><br>
+            <small>地址：{{ item.addr }}</small>
+            </p>
+            <hr>
+        </div>
+    </div>
 </body>
+
+<script type="text/javascript" src="js/public.js"></script>
 <script>
-var yylist = new Vue({
-  el: '#yylist',
-  data: {
-    parentMessage: 'Parent',
-    items: [
-      { 
-      	name: '南京新颐和康复医院',
-      	addr: '南京市栖霞区迈皋桥长营村100号',
-      	chuangwei: '100',
-      	url:'http://www.yihekf.com/'
-      },
-      { 
-      	name: '南京市玄武区康复医院',
-      	addr: '天山路10号',
-      	chuangwei: '200',
-      	url:'http://www.yihekf.com/'
-      },
-      {
-      	name: '南京建宁康复医院',
-      	addr: '南京市鼓楼区建宁路279号',
-      	chuangwei: '150',
-      	url: 'http://www.yihekf.com/'
-      }
-    ]
-  }
-})
+var vm = new Vue({
+    el: '#yylist',
+    data: {
+        items: []
+    },
+    methods: {            
+        reload: function() {
+            this.query("");
+        },
+        query: function(csname) {
+            var filter = {};
+            if (csname != "") {
+                //filter.name = csname;
+            }
+
+            priAjaxGet("/kfyy?filter="+encodeURI(JSON.stringify(filter)), "",
+                    function(data) {
+                        if (data.ret == 0) {
+                            vm.items = data.data;
+                        } else {
+                            alert(msg);
+                        }
+                    },
+                    function() {
+                        alert("获取康复医院信息失败！");
+                    });
+        }
+    }
+});
+
+function load() {
+    vm.reload();
+}
 </script>
 </html>
