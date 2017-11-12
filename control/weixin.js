@@ -115,7 +115,7 @@ exports.service_r = function(req, res, next) {
                 var openid = data.openid;
 
                 //console.log("body="+body);
-                console.log("code="+code+"access_token="+access_token+",openid="+openid);
+                //console.log("code="+code+"access_token="+access_token+",openid="+openid);
                 if (typeof(data.openid) == 'undefined') {
                     res.render('error', { title: '服务' });
                     return;
@@ -131,12 +131,12 @@ exports.service_r = function(req, res, next) {
 
                     authMiddleWave.gen_session(user, res);
 
-                    res.render('service', { title: '服务' });
-                    console.log("objs.length="+objs.length);
+                    res.render('srv', { title: '服务' });
+                    //console.log("objs.length="+objs.length);
                     return;
                 }
 
-                console.log("code="+code);
+                //console.log("code="+code);
 
                 request.get(
                     {
@@ -179,7 +179,7 @@ exports.service_r = function(req, res, next) {
                                 };
 
                                 authMiddleWave.gen_session(user, res);
-                                res.render('service', { title: '服务' });
+                                res.render('srv', { title: '服务' });
                             }) ()
                         }
                     }
