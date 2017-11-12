@@ -103,79 +103,88 @@ exports.service_r = function(req, res, next) {
             url:'https://api.weixin.qq.com/sns/oauth2/access_token?appid='+AppID+'&secret='+AppSecret+'&code='+code+'&grant_type=authorization_code',
         },
         function(error, response, body){
-            if(response.statusCode == 200){
+            if(response.statusCode != 200){
+                console.log(response.statusCode);
+                res.render('error', { title: '服务' });
+                return;
+            }
+
+            (async () => {
                 var data = JSON.parse(body);
                 var access_token = data.access_token;
                 var openid = data.openid;
 
                 //console.log("body="+body);
-                //console.log("access_token="+access_token+",openid="+openid);
-                if (typeof(data.openid) != 'undefined') {
-                    (async () => {
-                        var objs = await User.query({openId: openid});
-
-                        if (objs.length > 0) {
-                            var user = {
-                                role: "user",
-                                roleId: objs[0].id
-                            };
-
-                            authMiddleWave.gen_session(user, res);
-
-                            res.render('service', { title: '服务' });
-                            return;
-                        }
-                    }) ()
+                console.log("code="+code+"access_token="+access_token+",openid="+openid);
+                if (typeof(data.openid) == 'undefined') {
+                    res.render('error', { title: '服务' });
+                    return;
                 }
+
+                var objs = await User.query({openId: openid});
+
+                if (objs.length > 0) {
+                    var user = {
+                        role: "user",
+                        roleId: objs[0].id
+                    };
+
+                    authMiddleWave.gen_session(user, res);
+
+                    res.render('service', { title: '服务' });
+                    console.log("objs.length="+objs.length);
+                    return;
+                }
+
+                console.log("code="+code);
 
                 request.get(
                     {
                         url:'https://api.weixin.qq.com/sns/userinfo?access_token='+access_token+'&openid='+openid+'&lang=zh_CN',
                     },
                     function(error, response, body){
-                        if(response.statusCode == 200){
-
-                            var userinfo = JSON.parse(body);
-                            console.log("userinfo="+JSON.stringify(userinfo));
-
-                            if (typeof(userinfo.openid) != 'undefined') {
-                                (async () => {
-                                    var gender = 'male';
-                                    if (userinfo.sex != 1) {
-                                        gender = 'female';
-                                    }
-
-                                    var newUser = {
-                                        wx_name: userinfo.nickname,
-                                        openId: userinfo.openid,
-                                        gender: gender,
-                                        country: userinfo.country,
-                                        province: userinfo.province,
-                                        city: userinfo.city,
-                                    };
-
-                                    objs = await User.newAndSave(newUser);
-                                    if (!objs) {
-                                        res.render('error', { title: '服务' });
-                                        return;
-                                    }
-                                    var user = {
-                                        role: "user",
-                                        roleId: objs.id
-                                    };
-
-                                    authMiddleWave.gen_session(user, res);
-                                    res.render('service', { title: '服务' });
-                                }) ()
-                            }
-                        }else{
+                        if(response.statusCode != 200){
                             console.log(response.statusCode);
+                            res.render('error', { title: '服务' });
+                            return;
+                        }
+
+                        var userinfo = JSON.parse(body);
+                        console.log("userinfo="+JSON.stringify(userinfo));
+
+                        if (typeof(userinfo.openid) != 'undefined') {
+                            (async () => {
+                                var gender = 'male';
+                                if (userinfo.sex != 1) {
+                                    gender = 'female';
+                                }
+
+                                var newUser = {
+                                    wx_name: userinfo.nickname,
+                                    openId: userinfo.openid,
+                                    gender: gender,
+                                    country: userinfo.country,
+                                    province: userinfo.province,
+                                    city: userinfo.city,
+                                };
+
+                                objs = await User.newAndSave(newUser);
+                                if (!objs) {
+                                    res.render('error', { title: '服务' });
+                                    return;
+                                }
+                                var user = {
+                                    role: "user",
+                                    roleId: objs.id
+                                };
+
+                                authMiddleWave.gen_session(user, res);
+                                res.render('service', { title: '服务' });
+                            }) ()
                         }
                     }
                 );
-            }else{
-                console.log(response.statusCode);
-            }
+            }) ()
         }
     );
 }
