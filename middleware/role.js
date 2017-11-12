@@ -2,8 +2,8 @@
 var UserRole = {
     ur_unlogin: "none",
     ur_user: "user",
-    ur_xiaoqu: "xiaoqu",
-    ur_changshang: "changshang",
+    ur_shequ: "shequ",
+    ur_kfyy: "kfyy",
     ur_system: "system"
 };
 
@@ -16,11 +16,11 @@ UserRole.getUserRole = function (role) {
         case 'super':
             userRole = UserRole.ur_system;
             break;
-        case 'pps':
-            userRole = UserRole.ur_changshang;
+        case 'kfyy':
+            userRole = UserRole.ur_kfyy;
             break;
-        case 'property':
-            userRole = UserRole.ur_xiaoqu;
+        case 'shequ':
+            userRole = UserRole.ur_shequ;
             break;
         case 'normal':
             userRole = UserRole.ur_user;

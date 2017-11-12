@@ -1,8 +1,8 @@
 
 var config = require('../config');
-var User = require('../model/user');
 var eventproxy = require('eventproxy');
-//var Pps = require('../model/pps');
+var User = require('../model/user');
+var Kfyy = require('../model/kfyy');
 //var Community = require('../model/community');
 
 exports.userRequired = function(req, res, next) {
@@ -95,9 +95,9 @@ exports.authUser = function(req, res, next) {
             var user = null;
             if (userRole == "system" || userRole == "user") {
                 user = await User.getUserById(userRoleId);
-            /*} else if (userRole == "changshang") {
-                user = await Pps.getPpsById(userRoleId);
-            } else if (userRole == "xiaoqu") {
+            } else if (userRole == "kfyy") {
+                user = await Kfyy.getEntryById(userRoleId);
+            /*} else if (userRole == "xiaoqu") {
                 user = await Community.getXiaoquById(userRoleId);
             */}
             if (user) {
