@@ -60,6 +60,15 @@
 |contacts|varchar(16)   |联系人称呼||
 |email|varchar(64)   |联系人邮箱||
 
+### yqphb_user_info
+|字段   |类型  |说明   |备注   |
+|:-----|:-----|:------|:------|
+|uid  |int   |用户ID|foreign key：users id|
+|yqphbId  |int   |用户ID|foreign key：kfyy id|
+|rank   |int |名次 |defalut:-1|
+|date |date|刷新日期|年-月-日|
+
+
 ### yqphb_duizhan
 |字段   |类型  |说明   |备注   |
 |:-----|:-----|:------|:------|
