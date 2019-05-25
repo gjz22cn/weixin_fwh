@@ -4,8 +4,8 @@
 
 var config = {
     host: 'localhost',
-    database: 'shequdb',
-    db_username: 'shequ',
+    database: 'digprodb',
+    db_username: 'digpro',
     db_passwd: '123456',
 
     redis_host: '127.0.0.1',
@@ -13,8 +13,8 @@ var config = {
     redis_db: 0,
     redis_passwd: '',
 
-    session_secret: 'shequ_secret',
-    auth_cookie_name: 'shequ',
+    session_secret: 'digpro_secret',
+    auth_cookie_name: 'digpro',
 
     admin: 'admin',
     admin_passwd: 'admin',

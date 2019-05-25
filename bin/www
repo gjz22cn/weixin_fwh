@@ -14,8 +14,8 @@ var privateKey  = fs.readFileSync('./key/private.pem', 'utf8');
 var certificate = fs.readFileSync('./key/file.crt', 'utf8');
 var credentials = {key: privateKey, cert: certificate};
 
-var port = 80;
-var SSLPORT = 443;
+var port = 8000;
+var SSLPORT = 8443;
 
 /**
  * Get port from environment and store in Express.
