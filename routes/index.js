@@ -3,6 +3,7 @@ var crypto = require('crypto');
 var router = express.Router();
 var user = require('../control/user');
 var kfyy = require('../control/kfyy');
+var tssc = require('../control/tssc');
 var config = require('../config');
 var auth = require('../middleware/auth');
 var weixin = require("../control/weixin");
@@ -57,6 +58,14 @@ router.get('/kfyy', auth.userRequired, kfyy.get);
 router.get('/kfyy/:id', auth.userRequired, kfyy.getone);
 router.put('/kfyy/:id', auth.userRequired, kfyy.update);
 router.delete('/kfyy/:id', auth.userRequired, kfyy.delete);
+
+
+router.post('/tssc', auth.userRequired, tssc.add);
+router.get('/tssc/namelist', auth.userRequired, tssc.getNameList);
+router.get('/tssc', auth.userRequired, tssc.get);
+router.get('/tssc/:id', auth.userRequired, tssc.getone);
+router.put('/tssc/:id', auth.userRequired, tssc.update);
+router.delete('/tssc/:id', auth.userRequired, tssc.delete);
 /* RESTful api END */
 
 
