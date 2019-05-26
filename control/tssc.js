@@ -7,7 +7,7 @@ const moment = require('moment');
 
 exports.add = function(req, res, next) {
     var name = req.body.name;
-    var author = req.body.aythor;
+    var author = req.body.author;
     var state = req.body.state;
 
 
@@ -22,13 +22,8 @@ exports.add = function(req, res, next) {
         res.send(JSON.stringify(retStr));
     });
 
-    if ([name, phone].some(function(item) {return item === '';})) {
+    if ([name].some(function(item) {return item === '';})) {
         ep.emit('err', '信息不完整');
-        return;
-    }
-
-    if (!validator.isNumeric(phone) || !validator.isLength(phone, 11)) {
-        ep.emit('prop_err', '手机号码不合法');
         return;
     }
 
@@ -37,6 +32,7 @@ exports.add = function(req, res, next) {
             name: name,
             author: author,
             state: state,
+	    user_id: req.session.user.id
         };
 
         var obj = await Tssc.newAndSave(newObj);

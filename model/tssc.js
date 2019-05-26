@@ -1,6 +1,7 @@
 var Sequelize = require('sequelize');
 var sequelize = require('../lib/mysql');
 var TsscDetail = require('./tssc_detail');
+var User = require('./user');
 
 var Tssc = sequelize.define('tssc', {
     id: {type: Sequelize.INTEGER, primaryKey: true, autoIncrement: true, unique: true},
@@ -15,6 +16,7 @@ var Tssc = sequelize.define('tssc', {
 });
 
 Tssc.belongsTo(TsscDetail, {foreignKey: 'tssc_detail_id',  onDelete: 'SET NULL', constraints: false});
+Tssc.belongsTo(User, {foreignKey: 'user_id',  onDelete: 'SET NULL', constraints: false});
 
 var tssc = Tssc.sync({force: false});
 
@@ -23,6 +25,7 @@ Tssc.newAndSave = function(newObj) {
         name: newObj.name,
         author: newObj.author,
 	tssc_detail_id: null,
+	user_id: newObj.user_id,
 	state: '0',
 	first_time: Date.now()
     });

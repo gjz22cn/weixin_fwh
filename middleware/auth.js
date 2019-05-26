@@ -16,6 +16,7 @@ exports.userRequired = function(req, res, next) {
         res.send(JSON.stringify(retStr));
         return res.status(403).send('forbidden!');
     }
+    console.log("====>", req.session.user);
 
     next();
 };
